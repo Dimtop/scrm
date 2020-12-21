@@ -3,6 +3,7 @@
 const express = require("express");
 const cors = require('cors');
 const dotenv = require("dotenv");
+const path = require("path");
 const bodyParser = require("body-parser");
 const fileUpload = require("express-fileupload");
 //Middlewares
@@ -26,6 +27,8 @@ app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(fileUpload());
+
+app.use(express.static(path.join(__dirname,"Public")))
 //Routes
 app.use("/api/users",userRouter);
 app.use("/api/tickets",ticketRouter);
@@ -33,6 +36,11 @@ app.use("/api/ticketMessages",ticketMessageRouter);
 app.use("/api/projects",projectRouter)
 app.use("/api/purchases",purchaseRouter)
 app.use("/api/managers",managerRouter)
+
+//Serving 
+app.get("*",(req,res)=>{
+    res.sendFile(path.join(__dirname,"Public","index.html"))
+})
 //Initializing the server
 app.listen(process.env.PORT, (err)=>{
     if(err){
